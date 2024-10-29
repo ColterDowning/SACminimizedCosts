@@ -17,3 +17,11 @@ Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290), which was m
 observations might need substantially more.
 2. > these methods are often brittle with respect to their hyperparameters: learning rates, exploration constants, and other settings must be set carefully for different problem settings to achieve good results.
 
+To solve these problems, the Soft Actor Critic algorithm introduces several key innovations:
+1. The Soft Actor Critic is an off-policy algorithm that leverages a replay buffer to store and reuse past experiences. This means you don't need to rely solely on your most recent experiences.
+2. The objective function of the SAC includes an entropy maximization term, which encourages robustness and exploration.
+3. Practical neural network applications for the Actor / Critic architecture that allows for high-dimensional environments and stable learning.
+
+The Soft Actor Critic algorithm is quite beautiful in the sense that is draws lots of parallels to thermodynamics. Let's take a look.
+
+grsf
