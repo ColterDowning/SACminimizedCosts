@@ -26,8 +26,24 @@ The Soft Actor Critic algorithm is quite beautiful in the sense that is draws lo
 
 ![SAC_objective](https://github.com/user-attachments/assets/9ad9f5c9-cb6d-4dc3-9be6-ff4192e60ae7)
 
-Standard RL seeks to maximize the expected sum of rewards [r(s_t,a_t)]. SAC maximizes this aswell, as seen in the objective function J(π), but it also contains an entropy term denoted as H(π(.|s_t)).
+Standard RL seeks to maximize the expected sum of rewards [r(s_t,a_t)]. SAC maximizes this aswell, as seen in the objective function J(π), but it also contains a policy entropy term denoted as H(π(.|s_t)).
 
-Our first parallel comes when we consider that thrmodynamical systems tend to minimize their free energy.
-![free energy](https://github.com/user-attachments/assets/597269b2-1bf0-42c7-9239-1cc1c61a308a)
+Our first parallel comes when we consider that thermodynamical systems tend to minimize their Helmholtz free energy F, where E is the internal energy, T is the temperature, and S is the entropy.
+![helm_free_energy](https://github.com/user-attachments/assets/a4b0d689-5753-468f-a114-55bbceb9affb)
+
+Maximizing the SAC objective is analogous to minimizing the free energy of a system where the negative reward r is analogous to the internal energy E, policy entropy H(π(.|s_t)) is analogous to entropy S,
+and the temperature parameter α is analogous to the temperature of the system T. It's not a coincidence α is called the temperature parameter! The agent's policy can be viewed as a probability distribution that evolves
+through training to minimize free energy, similar to how a particle system reaches equilibrium in statistical mechanics. 
+
+A further insight comes when we consider a definition of entropy. In thermodynamics, the Gibbs entropy is defined as  
+![thermo_entropy](https://github.com/user-attachments/assets/11477712-867a-4495-8751-18cd6b765f53)
+where k_B is the Boltzmann constant and p_i is the probability of the system being in the i-th microstate. Think of a microstate as a way that a system could be configured. If we had a system of 2 coins, 1 microstate
+would be the case where both coins are heads, and another microstate would be where 1 is head and 1 is tails. p_i is the probabilty of that state occuring, so 2 heads is 25% but 1 heads 1 tail is 50% (tail/head and head/tail). Maximizing the entropy means maximizing the available microstates.
+
+
+The SAC objective seeks to maximize the policy entropy, where we can define the differential entropy (not accounting for action transformations) to be:
+![standard_entropy](https://github.com/user-attachments/assets/3511a751-ba36-4634-909d-023ec4b24967)
+Notice the similarities?! The objective maximizes the policy entropy, which means it is maximizing the available actions the agent can take (captured in a normal distribution). Why is this important? An agent that selects an action from a random distribution is occasionally going to select a sub-optimal action as determined by the critic, simply because there are more options to choose from. This stochasticity will lead the agent to 'explore' new areas of the environment. This exploration, as shown by [experiment](https://www.cs.cmu.edu/~bziebart/publications/thesis-bziebart.pdf), allows the agent to find global minima instead of exploiting the highest expected sum of rewards in a local minima! The exploration builds a robustness, which is ideal for complex environments like the stock market.
+
+On last note is the parallel to temperature. Temperature is the average kinetic energy of the particles in a system, and dictates the distribution of particles across the available energy states. A higher temperature leads to a wider distribution of occupied energy states, while a lower temperature leads to tighter distribution over a smaller amount of energy states. In our SAC objective, the α term scales the entropy. A higher α leads to a higher bias towards H(π(.|s_t)) in the objective, which will broaden the available action distribution for the agent!! The same is true for lower α all the way to 0 where we reduce our distribution to the single value of the calculated highest expected reward (absolute zero)!
 
