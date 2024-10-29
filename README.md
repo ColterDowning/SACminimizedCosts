@@ -50,7 +50,14 @@ On last note is the parallel to temperature. Temperature is the average kinetic 
 For our purposes, the SAC algorithm will be ideal since it performs well in complex environments, and has the ability to store historical data (off-policy). Now, how do we craft our reward function to minimize transaction costs? For this, I turned to Gordon Ritter and his paper [Machine Learning for Trading](https://cims.nyu.edu/~ritter/ritter2017machine.pdf). In his framework, the rational investor with a finite investment horizon chooses actions to maximize the expected utility of terminal wealth. While this isn't the exact problem we are setting out to solve, the insights are still useful since minimized transaction costs are required to maximize expected wealth. The principle reward function used is found in equation (15) as 
 ![reward](https://github.com/user-attachments/assets/b88a0961-f943-4485-b9a1-6b377572b1cd)
 
-where deltav_t is the change in 'portfolio value' from one time increment. 
+where deltav_t is the change in 'portfolio value' from one time increment and κ is a risk-aversion hyperparameter. I set κ to be 10e-4, as used in the paper.
+
+For the actual implementation, I used several libraries. The custom environment is a sub-class of the gymnasium library. The environment inherits useful methods like action space, observation space, and reset. For the SAC agent, I used the stable_baselines3 library. And of course, numpy and pandas for data manipulation. 
+
+As of now, the agent is wonky. I've adjusted it to behave quickly, selling off all its shares almost immediately, to having weird dropoffs in portfolio value.
+![Figure_4](https://github.com/user-attachments/assets/b1ffcbb0-ee21-45a4-8f73-112a634b6b92)
+![Figure_9](https://github.com/user-attachments/assets/0d17bcd0-af26-43ae-9133-a5a6371fae45)
+![Figure_10](https://github.com/user-attachments/assets/fbe644fc-ff2b-4d04-9db0-d9ddb6331f07)
 
 
 
