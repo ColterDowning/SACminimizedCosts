@@ -40,7 +40,6 @@ A further insight comes when we consider a definition of entropy. In thermodynam
 where k_B is the Boltzmann constant and p_i is the probability of the system being in the i-th microstate. Think of a microstate as a way that a system could be configured. If we had a system of 2 coins, 1 microstate
 would be the case where both coins are heads, and another microstate would be where 1 is head and 1 is tails. p_i is the probabilty of that state occuring, so 2 heads is 25% but 1 heads 1 tail is 50% (tail/head and head/tail). Maximizing the entropy means maximizing the available microstates.
 
-
 The SAC objective seeks to maximize the policy entropy, where we can define the differential entropy (not accounting for action transformations) to be:
 ![standard_entropy](https://github.com/user-attachments/assets/3511a751-ba36-4634-909d-023ec4b24967)
 Notice the similarities?! The objective maximizes the policy entropy, which means it is maximizing the available actions the agent can take (captured in a normal distribution). Why is this important? An agent that selects an action from a random distribution is occasionally going to select a sub-optimal action as determined by the critic, simply because there are more options to choose from. This stochasticity will lead the agent to 'explore' new areas of the environment. This exploration, as shown by [experiment](https://www.cs.cmu.edu/~bziebart/publications/thesis-bziebart.pdf), allows the agent to find global minima instead of exploiting the highest expected sum of rewards in a local minima! The exploration builds a robustness, which is ideal for complex environments like the stock market.
@@ -64,6 +63,17 @@ After adjustments:
 More adjustments:
 ![Figure_10](https://github.com/user-attachments/assets/fbe644fc-ff2b-4d04-9db0-d9ddb6331f07)
 
+This isn't ideal, but I had to spend a lot of time learning how reinforcement learning works. 5 days ago my only experience in machine learning was with LLMs and transformers. The hardest part was figuring out how to create the environment, let alone get it to compile. After many many hours, I'm proud that all the pieces are there, it just needs fine-tuning. I plan to keep working on this in the days to come. 
 
+
+Things to fix/improve:
+1. Baldacci, Benveniste, and Ritter have a more applicable paper called [Optimal Turnover, Liquidity, and Autocorrelation](https://arxiv.org/abs/2110.03810). This paper aims more at the heart of the optimization problem by attempting to directly calculate a steady-state optimal turnover rate of selling shares to minimize transaction costs. They derived the linear approximation to be 
+![turnover](https://github.com/user-attachments/assets/3f9e2f27-4130-4b87-96bd-797581a5fc21) While this looks promising, translating a turnover rate to a reward function didn't seem trivial, so I made the decision to focus more on the Machine Learning for Trading paper to get a first trial working.
+
+2. Training / validation split. Right now the agent is tested on the same data it is trained on. This will lead to overfitting. This is easily solved by splitting the data to be roughly 80% for training and 20% for testing (or even 10% for dev work and 10% for final test)
+
+3. Simulate strategy. Once the bugs are fixed, I need to compare the agent to a simple VWAP or TWAP strategy. The goal is to match performance, and hopefully even surpass.
+
+4. Research more for algorithms that seek to split large trades throughout the day to minimize transaction costs. I suspect that my current reward does not properly weigh the 'potential' of the shares. Right now it is too quick to sell the shares, so I need to experiment with holding incentives in the reward.
 
 
