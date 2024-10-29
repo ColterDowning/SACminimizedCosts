@@ -55,8 +55,13 @@ where deltav_t is the change in 'portfolio value' from one time increment and κ
 For the actual implementation, I used several libraries. The custom environment is a sub-class of the gymnasium library. The environment inherits useful methods like action space, observation space, and reset. For the SAC agent, I used the stable_baselines3 library. And of course, numpy and pandas for data manipulation. 
 
 As of now, the agent is wonky. I've adjusted it to behave quickly, selling off all its shares almost immediately, to having weird dropoffs in portfolio value.
+Early try:
 ![Figure_4](https://github.com/user-attachments/assets/b1ffcbb0-ee21-45a4-8f73-112a634b6b92)
+
+After adjustments:
 ![Figure_9](https://github.com/user-attachments/assets/0d17bcd0-af26-43ae-9133-a5a6371fae45)
+
+More adjustments:
 ![Figure_10](https://github.com/user-attachments/assets/fbe644fc-ff2b-4d04-9db0-d9ddb6331f07)
 
 
