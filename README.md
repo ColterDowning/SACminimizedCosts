@@ -24,4 +24,29 @@ To solve these problems, the Soft Actor Critic algorithm introduces several key 
 
 The Soft Actor Critic algorithm is quite beautiful in the sense that is draws lots of parallels to thermodynamics. Let's take a look.
 
-grsf
+J(π)= 
+t
+∑
+​
+ E 
+(s 
+t
+​
+ ,a 
+t
+​
+ )∼ρ 
+π
+​
+ 
+​
+ [r(s 
+t
+​
+ ,a 
+t
+​
+ )+αH(π(⋅∣s 
+t
+​
+ ))]
