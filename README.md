@@ -26,4 +26,8 @@ The Soft Actor Critic algorithm is quite beautiful in the sense that is draws lo
 
 ![SAC_objective](https://github.com/user-attachments/assets/9ad9f5c9-cb6d-4dc3-9be6-ff4192e60ae7)
 
-Standard RL seeks to maximize the expected sum of rewards [r(s_t,a_t)]. SAC maximizes this aswell, as seen in the objective function J(π)
+Standard RL seeks to maximize the expected sum of rewards [r(s_t,a_t)]. SAC maximizes this aswell, as seen in the objective function J(π), but it also contains an entropy term denoted as H(π(.|s_t)).
+
+Our first parallel comes when we consider that thrmodynamical systems tend to minimize their free energy.
+![free energy](https://github.com/user-attachments/assets/597269b2-1bf0-42c7-9239-1cc1c61a308a)
+
