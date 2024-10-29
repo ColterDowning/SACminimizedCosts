@@ -47,3 +47,11 @@ Notice the similarities?! The objective maximizes the policy entropy, which mean
 
 On last note is the parallel to temperature. Temperature is the average kinetic energy of the particles in a system, and dictates the distribution of particles across the available energy states. A higher temperature leads to a wider distribution of occupied energy states, while a lower temperature leads to tighter distribution over a smaller amount of energy states. In our SAC objective, the α term scales the entropy. A higher α leads to a higher bias towards H(π(.|s_t)) in the objective, which will broaden the available action distribution for the agent!! The same is true for lower α all the way to 0 where we reduce our distribution to the single value of the calculated highest expected reward (absolute zero)!
 
+For our purposes, the SAC algorithm will be ideal since it performs well in complex environments, and has the ability to store historical data (off-policy). Now, how do we craft our reward function to minimize transaction costs? For this, I turned to Gordon Ritter and his paper [Machine Learning for Trading](https://cims.nyu.edu/~ritter/ritter2017machine.pdf). In his framework, the rational investor with a finite investment horizon chooses actions to maximize the expected utility of terminal wealth. While this isn't the exact problem we are setting out to solve, the insights are still useful since minimized transaction costs are required to maximize expected wealth. The principle reward function used is found in equation (15) as 
+![reward](https://github.com/user-attachments/assets/b88a0961-f943-4485-b9a1-6b377572b1cd)
+
+where deltav_t is the change in 'portfolio value' from one time increment. 
+
+
+
+
