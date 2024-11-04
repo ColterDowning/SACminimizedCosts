@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 class Benchmark:
     
@@ -54,6 +55,7 @@ class Benchmark:
         Returns:
         DataFrame: A DataFrame containing the VWAP trades with timestamps, price, shares sold, and remaining inventory.
         """
+        data = data.dropna()
         total_volume = data['volume'].sum()
         total_steps = len(data)
         remaining_inventory = initial_inventory
@@ -79,21 +81,39 @@ class Benchmark:
 
         Parameters:
         idx (int): The index of the current step in the market data.
-        shares (int): The number of shares being traded at the current step.
+        shares (int or float): The number of shares being traded at the current step.
 
         Returns:
         float: The calculated VWAP price for the current step.
         """
+        # Ensure shares is a scalar value
+        if isinstance(shares, (pd.Series, np.ndarray)):
+            shares = shares.item()
+
         # Assumes you have best 5 bid prices and sizes in your dataset
-        bid_prices = [self.data[f'bid_price_{i}'] for i in range(1,6)]
-        bid_sizes = [self.data[f'bid_size_{i}'] for i in range(1,6)]
-        cumsum = 0
-        for idx, size in enumerate(bid_sizes):
-            cumsum += size
-            if cumsum >= shares:
-                break
+        bid_prices = [float(self.data.iloc[idx][f'bid_price_{i}']) for i in range(1, 6)]
+        bid_sizes = [float(self.data.iloc[idx][f'bid_size_{i}']) for i in range(1, 6)]
         
-        return np.sum(bid_prices[:idx+1] * bid_sizes[:idx+1]) / np.sum(bid_sizes[:idx+1])
+        cumsum = 0.0
+        total_price_volume = 0.0
+        
+        for i, size in enumerate(bid_sizes):
+            # Convert size to float if it’s not already a scalar
+            size = float(size)
+            
+            if cumsum + size >= shares:
+                # If adding this size exceeds shares, use only the remaining needed shares
+                remaining_shares = shares - cumsum
+                total_price_volume += remaining_shares * bid_prices[i]
+                cumsum += remaining_shares
+                break
+            else:
+                total_price_volume += size * bid_prices[i]
+                cumsum += size
+
+        # Calculate VWAP as total price-volume divided by total shares
+        vwap = total_price_volume / shares if shares > 0 else 0.0
+        return vwap
 
     def compute_components(self, alpha, shares, idx):
         """
@@ -108,8 +128,8 @@ class Benchmark:
         array: A NumPy array containing the slippage and market impact for the given trade.
         """
         actual_price = self.calculate_vwap(idx, shares)
-        Slippage = (self.data['bid_price_1'] - actual_price) * shares  # Assumes bid_price is in your dataset
-        Market_Impact = alpha * np.sqrt(shares)
+        Slippage = np.float32((self.data['bid_price_1'].iloc[idx] - actual_price) * shares)  # Assumes bid_price is in your dataset
+        Market_Impact = np.float32(alpha * np.sqrt(shares))
         return np.array([Slippage, Market_Impact])
     
     def simulate_strategy(self, trades, data, preferred_timeframe):
