@@ -55,6 +55,7 @@ class Benchmark:
         Returns:
         DataFrame: A DataFrame containing the VWAP trades with timestamps, price, shares sold, and remaining inventory.
         """
+        data = data.dropna()
         total_volume = data['volume'].sum()
         total_steps = len(data)
         remaining_inventory = initial_inventory
