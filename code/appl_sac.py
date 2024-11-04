@@ -47,13 +47,13 @@ else:
 model.learn(total_timesteps=100000)
 
 # Save the trained model
-model.save('sac_aapl_sell_model')
+model.save('sac_aapl_sell_model_new')
 
 
 #--------------Evaluate Agent--------------------------------------------------------------
 
 # Load the trained model from the saved zip file
-loaded_model = SAC.load('sac_aapl_sell_model.zip')
+loaded_model = SAC.load('sac_aapl_sell_model_new.zip')
 
 # Evaluate the model
 mean_reward, std_reward = evaluate_policy(loaded_model, env, n_eval_episodes=100, deterministic=True)
